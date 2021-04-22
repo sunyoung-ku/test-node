@@ -16,7 +16,8 @@ router.post('/', (req, res, next) => {
 
   _.each(['user_id', 'user_name', 'user_pwd', 'user_tel_no'], (v) => {
     console.log(req.body[v]);
-    if (_.isEmpty(req.body[v])) {
+    if (validate && _.isEmpty(req.body[v])) {
+      console.log(`check params : ${v}`);
       next(new Error(`${v} is mandantory`));
       validate = false;
     }
