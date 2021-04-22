@@ -10,7 +10,6 @@ const getEmptyParams = (list, param) => {
     arr.push(cur);
     return arr;
   }, []);
-
 };
 
 router.get('/', (req, res) => {
