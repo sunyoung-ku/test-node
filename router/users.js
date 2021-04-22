@@ -23,7 +23,7 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res, next) => {
 
-  let validate = true;
+
   let emptyParam = getEmptyParams(
       ['user_id', 'user_name', 'user_pwd', 'user_tel_no']
       , req.body);
