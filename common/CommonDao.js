@@ -12,7 +12,8 @@ module.exports = {
 
       let format = {language: 'sql', indent: '  '};
       let queryIdArr = queryID.split('.')
-      let query = mybatisMapper.getStatement(queryIdArr[0], queryIdArr[1], sqlParam,
+      let query = mybatisMapper.getStatement(queryIdArr[0], queryIdArr[1],
+          sqlParam,
           format);
 
       console.log(query);
@@ -20,6 +21,7 @@ module.exports = {
       db.getConnection((conn) => {
 
         conn.query(query, (err, result, field) => {
+
           processResult(camelcaseKeys(result));
         });
         conn.release();
@@ -27,12 +29,13 @@ module.exports = {
 
     });
   },
-  fetch : function (nameSpace, queryID, sqlParam, processResult) {
+  fetch : function (queryID, sqlParam, processResult) {
     db.getConnection((conn) => {
 
       let format = {language: 'sql', indent: '  '};
       let queryIdArr = queryID.split('.')
-      let query = mybatisMapper.getStatement(queryIdArr[0], queryIdArr[1], sqlParam,
+      let query = mybatisMapper.getStatement(queryIdArr[0], queryIdArr[1],
+          sqlParam,
           format);
 
       console.log(query);
@@ -41,11 +44,15 @@ module.exports = {
         conn.beginTransaction();
         conn.query(query, (err, result, field) => {
           if (err) {
+            // console.error(err);
+            processResult(err);
             conn.rollback();
-          }
 
-          processResult(result);
-          conn.commit();
+          } else {
+
+            processResult(null, result.affectedRows);
+            conn.commit();
+          }
         });
 
         conn.release();

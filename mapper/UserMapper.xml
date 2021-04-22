@@ -14,4 +14,23 @@
         AND USER_ID = #{user_id}
       </if>
   </select>
+  <insert id="insert">
+    INSERT  INTO TB_USER_MST
+    (
+        user_id
+        , pwd_not_match_cnt
+        , user_name
+        , user_pwd
+        , user_tel_no
+        , password_not_match_cnt
+    )
+    VALUES(
+            #{user_id}
+          , 0
+          , #{user_name}
+          , SHA2(#{user_pwd},256)
+          , #{user_tel_no}
+          , 0
+          )
+  </insert>
 </mapper>
