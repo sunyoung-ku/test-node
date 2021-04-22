@@ -2,6 +2,17 @@ let express = require('express');
 let router = express.Router();
 let commonDao = require('../common/CommonDao');
 let _ = require('lodash');
+
+const getEmptyParams = (list, param) => {
+  return _.filter(list, v => {
+    return _.isEmpty(param[v]);
+  }).reduce((arr, cur) => {
+    arr.push(cur);
+    return arr;
+  }, []);
+
+};
+
 router.get('/', (req, res) => {
 
   commonDao.select("userMapper.selectList", req.query, (result) => {
@@ -13,17 +24,13 @@ router.get('/', (req, res) => {
 router.post('/', (req, res, next) => {
 
   let validate = true;
+  let emptyParam = getEmptyParams(
+      ['user_id', 'user_name', 'user_pwd', 'user_tel_no']
+      , req.body);
 
-  _.each(['user_id', 'user_name', 'user_pwd', 'user_tel_no'], (v) => {
-    console.log(req.body[v]);
-    if (validate && _.isEmpty(req.body[v])) {
-      console.log(`check params : ${v}`);
-      next(new Error(`${v} is mandantory`));
-      validate = false;
-    }
-  });
-
-  if (validate) {
+  if (emptyParam.length > 0) {
+    next(`${emptyParam.join(',')} is mandantory`);
+  } else {
     commonDao.fetch("userMapper.insert", req.body, (err, result) => {
       if (err) {
         next(err);
@@ -34,6 +41,7 @@ router.post('/', (req, res, next) => {
 
     });
   }
+
 })
 ;
 
