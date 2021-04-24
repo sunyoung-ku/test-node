@@ -1,17 +1,16 @@
-const mysql= require('mysql2')
+const mysql= require('mysql2/promise')
 const config = require('../common/db_config.json');
 
 let pool = mysql.createPool(config);
 
 
+async function getConnection(){
+  const connection = await pool.getConnection(async conn => conn);
 
-module.exports.getConnection=  (callback) =>{
-  pool.getConnection(function (err,connection){
-    if(err){
-      console.log(err);
-    }
-    callback(connection);
-  });
+  return connection;
 }
+
+
+module.exports.getConnection =  getConnection;
 
 

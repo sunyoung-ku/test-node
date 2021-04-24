@@ -7,57 +7,47 @@ mybatisMapper.createMapper([
 
 module.exports = {
 
-  select: function (queryID, sqlParam, processResult) {
-    db.getConnection((conn) => {
+  select: async function (queryID, sqlParam) {
+    let conn = await db.getConnection(conn => conn);
+    try {
 
       let format = {language: 'sql', indent: '  '};
       let queryIdArr = queryID.split('.')
+
       let query = mybatisMapper.getStatement(queryIdArr[0], queryIdArr[1],
           sqlParam,
           format);
+      console.log('query  : ', query);
+      let result = await conn.query(query, sqlParam, result => result);
+      console.log('rtn length : ', result[0].length);
+      conn.release();
+      return result[0];
+    } catch (e) {
+      throw e;
+    } finally {
 
-      console.log(query);
-
-      db.getConnection((conn) => {
-
-        conn.query(query, (err, result, field) => {
-
-          processResult(camelcaseKeys(result));
-        });
-        conn.release();
-      });
-
-    });
+    }
   },
-  fetch : function (queryID, sqlParam, processResult) {
-    db.getConnection((conn) => {
+  fetch : async function (queryID, sqlParam) {
+    let conn = await db.getConnection(conn => conn);
+
+    try {
 
       let format = {language: 'sql', indent: '  '};
       let queryIdArr = queryID.split('.')
+
       let query = mybatisMapper.getStatement(queryIdArr[0], queryIdArr[1],
           sqlParam,
           format);
-
-      console.log(query);
-
-      db.getConnection((conn) => {
-        conn.beginTransaction();
-        conn.query(query, (err, result, field) => {
-          if (err) {
-            // console.error(err);
-            processResult(err);
-            conn.rollback();
-
-          } else {
-
-            processResult(null, result.affectedRows);
-            conn.commit();
-          }
-        });
-
-        conn.release();
-      });
-
-    });
+      console.log('query  : ', query);
+      let result = await conn.query(query, sqlParam, result => result);
+      console.log('rtn length : ', result[0].length);
+      conn.release();
+      return result[0];
+    } catch (e) {
+      throw e;
+    } finally {
+      conn.rollback()
+    }
   }
 }

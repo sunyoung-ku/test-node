@@ -12,36 +12,31 @@ const getEmptyParams = (list, param) => {
   }, []);
 };
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
 
-  commonDao.select("userMapper.selectList", req.query, (result) => {
-    res.json(result);
-  });
+  let result = await commonDao.select("userMapper.selectList", req.query);
+  res.json(result);
 
 });
 
-router.post('/', (req, res, next) => {
+router.post('/', async (req, res, next) => {
+  try {
+    let emptyParam = getEmptyParams(
+        ['user_id', 'user_name', 'user_pwd', 'user_tel_no']
+        , req.body);
 
+    if (emptyParam.length > 0) {
+      next(`${emptyParam.join(',')} is mandantory`);
+    } else {
 
-  let emptyParam = getEmptyParams(
-      ['user_id', 'user_name', 'user_pwd', 'user_tel_no']
-      , req.body);
+      let result = await commonDao.fetch("userMapper.insert", req.body);
 
-  if (emptyParam.length > 0) {
-    next(`${emptyParam.join(',')} is mandantory`);
-  } else {
-    commonDao.fetch("userMapper.insert", req.body, (err, result) => {
-      if (err) {
-        next(err);
-      } else {
-        console.log(result);
-        res.json({result: result > 0 ? true : false});
-      }
+      res.json({result: result > 0 ? true : false});
 
-    });
+    }
+  } catch (e) {
+    next(e);
   }
-
-})
-;
+});
 
 module.exports = router;
