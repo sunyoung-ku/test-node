@@ -20,7 +20,7 @@ module.exports = {
       let result = await conn.query(query, sqlParam, result => result);
       console.log('rtn length : ', result[0].length);
       conn.release();
-      return result[0];
+      return camelcaseKeys(result[0]);
     } catch (e) {
       throw e;
     } finally {
