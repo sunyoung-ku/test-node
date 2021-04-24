@@ -4,13 +4,9 @@ const config = require('../common/db_config.json');
 let pool = mysql.createPool(config);
 
 
-async function getConnection(){
-  const connection = await pool.getConnection(async conn => conn);
-
+module.exports.getConnection = async () => {
+  const connection = await pool.getConnection();
   return connection;
-}
-
-
-module.exports.getConnection =  getConnection;
+};
 
 

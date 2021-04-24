@@ -4,6 +4,7 @@ const mybatisMapper = require('mybatis-mapper');
 mybatisMapper.createMapper([
   'mapper/UserMapper.xml'
 ]);
+const format = {language: 'sql', indent: '  '};
 
 module.exports = {
 
@@ -11,12 +12,10 @@ module.exports = {
     let conn = await db.getConnection(conn => conn);
     try {
 
-      let format = {language: 'sql', indent: '  '};
       let queryIdArr = queryID.split('.')
-
       let query = mybatisMapper.getStatement(queryIdArr[0], queryIdArr[1],
-          sqlParam,
-          format);
+          sqlParam, format);
+
       console.log('query  : ', query);
       let result = await conn.query(query, sqlParam, result => result);
       console.log('rtn length : ', result[0].length);
@@ -33,21 +32,20 @@ module.exports = {
 
     try {
 
-      let format = {language: 'sql', indent: '  '};
       let queryIdArr = queryID.split('.')
 
-      let query = mybatisMapper.getStatement(queryIdArr[0], queryIdArr[1],
-          sqlParam,
-          format);
+      let query = mybatisMapper.getStatement(queryIdArr[0], queryIdArr[1], sqlParam, format);
       console.log('query  : ', query);
       let result = await conn.query(query, sqlParam, result => result);
-      console.log('rtn length : ', result[0].length);
-      conn.release();
-      return result[0];
+      console.log(result);
+      console.log('affectedRows : ', result[0].affectedRows);
+
+      return result[0].affectedRows;
     } catch (e) {
+      conn.rollback();
       throw e;
     } finally {
-      conn.rollback()
+      conn.release();
     }
   }
 }

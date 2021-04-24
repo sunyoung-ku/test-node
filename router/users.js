@@ -21,16 +21,23 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res, next) => {
   try {
+    
     let emptyParam = getEmptyParams(
         ['user_id', 'user_name', 'user_pwd', 'user_tel_no']
         , req.body);
 
     if (emptyParam.length > 0) {
-      next(`${emptyParam.join(',')} is mandantory`);
+      throw new Error(`${emptyParam.join(',')} is mandantory`);
     } else {
 
-      let result = await commonDao.fetch("userMapper.insert", req.body);
+      let userCount = await commonDao.select("userMapper.selectList", {user_id:req.body.user_id});
 
+      if(userCount.length >0){
+        throw new Error(`already registed`);
+      }
+
+      let result = await commonDao.fetch("userMapper.insert", req.body);
+      console.log(result);
       res.json({result: result > 0 ? true : false});
 
     }
