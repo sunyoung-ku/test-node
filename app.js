@@ -8,7 +8,7 @@ const morgan = require('morgan');
 
 //DEFINE ROUTER
 const users = require('./router/users');
-
+const homeController = require('./router/home');
 function error(err, req, res, next) {
 
 
@@ -22,6 +22,11 @@ app.use(express.static('public'));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
+app.set('views', __dirname + '/view');
+app.set('view engine', 'ejs');
+app.engine('html', require('ejs').renderFile);
+
+app.use('/',homeController);
 app.use('/user', users);
 
 app.use((err, req, res, next) => {

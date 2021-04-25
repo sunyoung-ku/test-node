@@ -40,12 +40,12 @@
   <update id="update">
     <![CDATA[
     UPDATE tb_user_mst
-    SET   pwd_not_match_cnt       = #{pwd_not_match_cnt}
+    SET   pwd_not_match_cnt     = #{pwd_not_match_cnt}
       , user_name               = #{user_name}
       , user_pwd                = #{user_pwd}
       , user_tel_no             = #{user_tel_no}
       , password_not_match_cnt  = #{password_not_match_cnt}
-    WHERE user_id                 = #{user_id}
+    WHERE user_id               = #{user_id}
     ]]>
   </update>
 

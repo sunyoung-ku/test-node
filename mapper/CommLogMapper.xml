@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="comLogMapper">
+
+  <insert id="insert">
+      <![CDATA[
+        /* userMapper.insert */
+        INSERT INTO tb_comm_log_mst
+        ( user_id
+        , pwd_not_match_cnt
+        , user_name
+        , user_pwd
+        , user_tel_no
+        , password_not_match_cnt)
+        VALUES ( #{user_id}
+               , 0
+               , #{user_name}
+               , SHA2(#{user_pwd}, 256)
+               , #{user_tel_no}
+               , 0)
+    ]]>
+  </insert>
+
+</mapper>

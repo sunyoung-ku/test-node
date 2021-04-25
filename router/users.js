@@ -1,6 +1,5 @@
 let express = require('express');
 let router = express.Router();
-let commonDao = require('../common/CommonDao');
 const userService = require('../service/UserService');
 let _ = require('lodash');
 
