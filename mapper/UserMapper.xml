@@ -48,4 +48,11 @@
     WHERE user_id                 = #{user_id}
     ]]>
   </update>
+
+  <delete id="delete">
+    <![CDATA[
+    DELETE FROM tb_user_mst
+    WHERE user_id                 = #{user_id}
+    ]]>
+  </delete>
 </mapper>

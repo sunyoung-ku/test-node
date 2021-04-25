@@ -17,5 +17,13 @@ module.exports = {
      } catch (e) {
         throw e;
      }
+  },
+  delete : async (user) =>{
+    try {
+      const insertRows = await dao.fetch(`userMapper.delete`, user);
+      return insertRows;
+    } catch (e) {
+      throw e;
+    }
   }
 }

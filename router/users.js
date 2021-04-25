@@ -47,4 +47,25 @@ router.post('/', async (req, res, next) => {
   }
 });
 
+router.delete('/', async (req, res, next) => {
+  try {
+
+    let emptyParam = getEmptyParams(
+        ['user_id']
+        , req.body);
+
+    if (emptyParam.length > 0) {
+      throw new Error(`${emptyParam.join(',')} is mandantory`);
+    } else {
+
+      let result = await userService.delete( req.body);
+      console.log(result);
+      res.json({result: result > 0 ? true : false});
+
+    }
+  } catch (e) {
+    next(e);
+  }
+});
+
 module.exports = router;
