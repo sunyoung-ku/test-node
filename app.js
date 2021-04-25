@@ -34,6 +34,5 @@ app.use((err, req, res, next) => {
   res.json({error: err.toString()});
 });
 app.listen(PORT, () => {
-
   console.log(`SERVER LISTENING ON ${PORT}`);
 })
