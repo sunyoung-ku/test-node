@@ -1,6 +1,7 @@
 let express = require('express');
 let router = express.Router();
 let commonDao = require('../common/CommonDao');
+const userService = require('../service/UserService');
 let _ = require('lodash');
 
 const getEmptyParams = (list, param) => {
@@ -14,7 +15,7 @@ const getEmptyParams = (list, param) => {
 
 router.get('/', async (req, res) => {
 
-  let result = await commonDao.select("userMapper.selectList", req.query);
+  let result = await userService.getUserList(req.query);
   res.json(result);
 
 });
@@ -30,13 +31,13 @@ router.post('/', async (req, res, next) => {
       throw new Error(`${emptyParam.join(',')} is mandantory`);
     } else {
 
-      let userCount = await commonDao.select("userMapper.selectList", {user_id:req.body.user_id});
+      let userCount = await userService.getUserList( {user_id:req.body.user_id});
 
       if(userCount.length >0){
         throw new Error(`already registed`);
       }
 
-      let result = await commonDao.fetch("userMapper.insert", req.body);
+      let result = await userService.insert( req.body);
       console.log(result);
       res.json({result: result > 0 ? true : false});
 
