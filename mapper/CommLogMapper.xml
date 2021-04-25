@@ -7,7 +7,7 @@
       <![CDATA[
         /* userMapper.insert */
         INSERT INTO tb_comm_log_mst
-        ( user_id
+        ( log_seq
         , pwd_not_match_cnt
         , user_name
         , user_pwd
